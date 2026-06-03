@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>KeuanganKu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>💰 KeuanganKu</h1>
+
+    <form method="GET">
+
+        <input type="month"
+               name="bulan"
+               value="{{ bulan }}">
+
+        <button type="submit">
+            Lihat Bulan
+        </button>
+
+    </form>
+
+    <div class="summary">
+
+        <div class="box">
+            <h3>Budget</h3>
+            <p>Rp {{ "{:,.0f}".format(budget) }}</p>
+        </div>
+
+        <div class="box">
+            <h3>Pengeluaran</h3>
+            <p>Rp {{ "{:,.0f}".format(total) }}</p>
+        </div>
+
+        <div class="box">
+            <h3>Sisa</h3>
+            <p>Rp {{ "{:,.0f}".format(sisa) }}</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Atur Budget</h2>
+        <a href="/hapus_budget/{{ bulan }}"
+            class="btn-hapus-budget"
+            onclick="return confirm('Hapus budget bulan ini?')">
+            🗑 Hapus Budget
+        </a>
+
+        <form action="/set_budget" method="POST">
+
+            <input type="month"
+                   name="bulan"
+                   value="{{ bulan }}"
+                   required>
+
+            <input type="number"
+                   id="budget"
+                   name="nominal"
+                   placeholder="500.000"
+                   required>
+
+            <button>
+                Simpan Budget
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Tambah Pengeluaran</h2>
+
+        <form action="/tambah_transaksi"
+              method="POST">
+
+            <input type="text"
+                   name="nama_barang"
+                   placeholder="Nama Barang"
+                   required>
+
+            <input type="number"
+                   id="harga"
+                   name="harga"
+                   placeholder="15.000"
+                   required>
+
+            <button>
+                Tambah
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Riwayat</h2>
+
+        <table>
+
+            <tr>
+                <th>Tanggal</th>
+                <th>Barang</th>
+                <th>Harga</th>
+                <th>Aksi</th>
+            </tr>
+
+            {% for item in transaksi %}
+
+            <tr>
+
+                <td>{{ item.tanggal }}</td>
+
+                <td>{{ item.nama_barang }}</td>
+
+                <td>
+                    Rp {{ "{:,.0f}".format(item.harga) }}
+                </td>
+
+                <td>
+                    <a href="/hapus/{{ item.id }}"
+                        class="btn-hapus"
+                        onclick="return confirm('Yakin ingin menghapus transaksi ini?')">
+                        🗑 Hapus
+                    </a>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>)
+
+</body>
+</html>
